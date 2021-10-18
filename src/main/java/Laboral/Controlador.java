@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(description = "Controlador de la información de los empleados y sus sueldos.", urlPatterns = { "/nominas" })
+@WebServlet(description = "Controlador de la informaciï¿½n de los empleados y sus sueldos.", urlPatterns = { "/empresa" })
 public class Controlador extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -20,7 +20,8 @@ public class Controlador extends HttpServlet {
 		super();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String opcion = request.getParameter("opcion");
 
 		if (opcion.equals("mostrarEmpleados")) {
@@ -37,22 +38,58 @@ public class Controlador extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		
-		else if(opcion.equals("mostarSalario")){
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/mostarSalario.jsp");
+
+		else if (opcion.equals("mostrarSalario")) {
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/mostrarSalario.jsp");
 			requestDispatcher.forward(request, response);
-		}
-		else if(opcion.equals("salarioEspecifico")) {
+		} else if (opcion.equals("salarioEspecifico")) {
 			DatabaseManager dm;
 			try {
 				dm = new DatabaseManager();
 				String dni = request.getParameter("dni");
 				Empleado emp = dm.selectEmpleado(dni);
 				int salario = dm.selectSalario(dni);
-				
+
 				request.setAttribute("empleado", emp);
 				request.setAttribute("salario", salario);
 				RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/salarioEspecifico.jsp");
+				requestDispatcher.forward(request, response);
+			} catch (SQLException | DatosNoCorrectosException e) {
+				e.printStackTrace();
+			}
+		} else if (opcion.equals("meditar")) {
+			String dni = request.getParameter("dni");
+			DatabaseManager dm;
+			Empleado emp;
+			try {
+				dm = new DatabaseManager();
+				emp = dm.selectEmpleado(dni);
+				request.setAttribute("empleado", emp);
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/editar.jsp");
+				requestDispatcher.forward(request, response);
+			} catch (SQLException | DatosNoCorrectosException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException{
+		String opcion = request.getParameter("opcion");
+		
+		if(opcion.equals("editar")) {
+			DatabaseManager dm;
+			//String nombre, String dni, String sexo, int categoria, int anyos
+			String nombre = (String) request.getAttribute("nombre");
+			String dni = (String) request.getAttribute("dni");
+			String sexo = (String) request.getAttribute("sexo");
+			int categoria = (int) request.getAttribute("categoria");
+			int anyos = (int) request.getAttribute("anyos");
+			Empleado emp;
+			try {
+				dm = new DatabaseManager();
+				emp = new Empleado(nombre,dni,sexo,categoria,anyos);
+				dm.actualizarEmpleado(emp);
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("/index.js");
 				requestDispatcher.forward(request, response);
 			}catch(SQLException | DatosNoCorrectosException e) {
 				e.printStackTrace();

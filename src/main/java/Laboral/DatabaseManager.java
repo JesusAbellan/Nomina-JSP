@@ -10,16 +10,40 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp2.BasicDataSource;
+
 public class DatabaseManager {
 
 	private Connection con;
 	private Statement st;
 	private PreparedStatement ps;
 	private ResultSet rs;
+	private static BasicDataSource dataSource = null;
 
 	public DatabaseManager() throws SQLException {
-		con = DriverManager.getConnection("jdbc:mysql://localhost:3306/MySQL", "root", "Hermenegildo97");
+		con = getDataSource().getConnection();
 		st = con.createStatement();
+	}
+
+	private static DataSource getDataSource() {
+		if (dataSource == null) {
+			dataSource = new BasicDataSource();
+			dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+			dataSource.setUsername("root");
+			dataSource.setPassword("");
+			dataSource.setUrl("jdbc:mysql://localhost:3306/Nominas?useTimezone=true&serverTimezone=UTC");
+			dataSource.setInitialSize(20);
+			dataSource.setMaxIdle(15);
+			dataSource.setMaxTotal(20);
+			dataSource.setMaxWaitMillis(5000);
+		}
+		return dataSource;
+	}
+
+	public static Connection getConnection() throws SQLException {
+		return getDataSource().getConnection();
 	}
 
 	public void altaEmpleado(Empleado emp, Nomina nom) throws SQLException {
@@ -37,7 +61,8 @@ public class DatabaseManager {
 	public void actualizarEmpleado(String dni, String valor, int aux) throws SQLException {
 		switch (aux) {
 		case 1:
-			ps = con.prepareStatement("UPDATE Nominas.empleados SET Nombre_Completo = '" + valor + "' WHERE DNI = '" + dni + "';");
+			ps = con.prepareStatement(
+					"UPDATE Nominas.empleados SET Nombre_Completo = '" + valor + "' WHERE DNI = '" + dni + "';");
 			break;
 		case 2:
 			ps = con.prepareStatement("UPDATE Nominas.empleados SET DNI = '" + valor + "' WHERE DNI = '" + dni + "';");
@@ -46,12 +71,21 @@ public class DatabaseManager {
 			ps = con.prepareStatement("UPDATE Nominas.empleados SET Sexo = '" + valor + "' WHERE DNI = '" + dni + "';");
 			break;
 		case 4:
-			ps = con.prepareStatement("UPDATE Nominas.empleados SET Categoria = '" + valor + "' WHERE DNI = '" + dni + "';");
+			ps = con.prepareStatement(
+					"UPDATE Nominas.empleados SET Categoria = '" + valor + "' WHERE DNI = '" + dni + "';");
 			break;
 		case 5:
-			ps = con.prepareStatement("UPDATE Nominas.empleados SET Anyos = '" + valor + "' WHERE DNI = '" + dni + "';");
+			ps = con.prepareStatement(
+					"UPDATE Nominas.empleados SET Anyos = '" + valor + "' WHERE DNI = '" + dni + "';");
 			break;
 		}
+		ps.executeUpdate();
+	}
+
+	public void actualizarEmpleado(Empleado emp) throws SQLException {
+		ps = con.prepareStatement("UPDATE Nominas.empleados SET Nombre_Completo = '" + emp.nombre + "' SEXO = '"
+				+ emp.sexo + "' Categoria = '" + emp.getCategoria() + "' Anyos = '" + emp.anyos + "' "
+				+ " WHERE DNI = '" + emp.dni + "';");
 		ps.executeUpdate();
 	}
 
@@ -64,17 +98,19 @@ public class DatabaseManager {
 		rs = ps.executeQuery();
 		ResultSetMetaData rsmd = rs.getMetaData();
 		List<Empleado> empleados = new ArrayList();
-		while(rs.next()) {
-			for (int i = 1; i <=5 ; i++) {
-		        if (i > 1) System.out.print(",  ");
-		        String columnValue = rs.getString(i);
-		        System.out.print(columnValue + " " + rsmd.getColumnName(i));
-		    }
+		while (rs.next()) {
+			for (int i = 1; i <= 5; i++) {
+				if (i > 1)
+					System.out.print(",  ");
+				String columnValue = rs.getString(i);
+				System.out.print(columnValue + " " + rsmd.getColumnName(i));
+			}
 			System.out.println();
 			System.out.println("--------------------------------");
-			
-			empleados.add(new Empleado(rs.getString(0),rs.getString(1),rs.getString(2),rs.getInt(3),rs.getInt(4)));
-			
+
+			Empleado emp = new Empleado(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5));
+			empleados.add(emp);
+			System.out.println(emp.dni);
 		}
 		return empleados;
 	}
@@ -83,10 +119,10 @@ public class DatabaseManager {
 		ps = con.prepareStatement("SELECT * FROM Nominas.empleados WHERE DNI = '" + dni + "';");
 		rs = ps.executeQuery();
 		rs.next();
-		return new Empleado(rs.getString(1),rs.getString(2),rs.getString(3),rs.getInt(4),rs.getInt(5));
+		return new Empleado(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5));
 	}
-	
-	public List<String> selectDNIs() throws SQLException{
+
+	public List<String> selectDNIs() throws SQLException {
 		List<String> dnis = new ArrayList();
 		ps = con.prepareStatement("SELECT DNI FROM Nominas.empleados");
 		rs = ps.executeQuery();
@@ -100,7 +136,7 @@ public class DatabaseManager {
 		ps = con.prepareStatement("select sueldo from Nominas.nominas WHERE DNI = '" + dni + "';");
 		rs = ps.executeQuery();
 		int salario = 0;
-		while(rs.next()) {
+		while (rs.next()) {
 			System.out.println(rs.getInt(1));
 			salario = rs.getInt(1);
 		}
