@@ -8,6 +8,15 @@ public class Empleado extends Persona {
 	private int categoria;
 	int anyos;
 
+	public int getAnyos() {
+		return anyos;
+	}
+
+	public void setAnyos(int anyos) {
+		this.anyos = anyos;
+	}
+	
+
 	/**
 	 * Constructor para empleado al que se le asignan los valores de los atributos de la clase Persona deseados por el usuario y los valores por defecto de los atributos específicos de la clase Empleado
 	 * @param nombre	Nombre completo de la persona.

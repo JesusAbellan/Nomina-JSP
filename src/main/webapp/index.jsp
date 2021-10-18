@@ -5,15 +5,19 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Nominas JSP</title>
+		<link rel="stylesheet" href="styles/general.css"></link>
 	</head>
 	<body>
 		<h1>Menu de Nominas JSP</h1>
-		<table border="1">
+		<table>
 			<tr>
 				<td><a href ="empresa?opcion=mostrarEmpleados">Mostrar Empleados</a></td>
 			</tr>
 			<tr>
 				<td><a href ="empresa?opcion=mostrarSalario">Mostrar Salario</a></td>
+			</tr>
+			<tr>
+				<td><a href ="empresa?opcion=buscarEmpleados">Buscar Empleados</a></td>
 			</tr>
 		</table>
 	</body>

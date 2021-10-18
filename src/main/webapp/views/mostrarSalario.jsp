@@ -4,9 +4,18 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Buscar Salario</title>
+<link rel="stylesheet" href="styles/general.css"></link>
 </head>
 <body>
-	<h1>PRUEBA SALARIOS</h1>
+	<h1>Buscar Salario</h1>
+	<p>Introduce un DNI para ver el salario del Empleado</p>
+	<form action="empresa">
+		<input type="hidden" name="opcion" value="salarioEspecifico">
+		<input type="text" name="dni">
+		<input type="submit" value = "Buscar Empleado">
+	</form>
+	<br>
+	<button type="button" name="back" class="back" onclick="history.back()">Volver</button>
 </body>
 </html>

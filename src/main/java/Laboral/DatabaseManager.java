@@ -32,7 +32,7 @@ public class DatabaseManager {
 			dataSource = new BasicDataSource();
 			dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 			dataSource.setUsername("root");
-			dataSource.setPassword("");
+			dataSource.setPassword("Hermenegildo97");
 			dataSource.setUrl("jdbc:mysql://localhost:3306/Nominas?useTimezone=true&serverTimezone=UTC");
 			dataSource.setInitialSize(20);
 			dataSource.setMaxIdle(15);
@@ -83,8 +83,8 @@ public class DatabaseManager {
 	}
 
 	public void actualizarEmpleado(Empleado emp) throws SQLException {
-		ps = con.prepareStatement("UPDATE Nominas.empleados SET Nombre_Completo = '" + emp.nombre + "' SEXO = '"
-				+ emp.sexo + "' Categoria = '" + emp.getCategoria() + "' Anyos = '" + emp.anyos + "' "
+		ps = con.prepareStatement("UPDATE Nominas.empleados SET Nombre_Completo = '" + emp.nombre + "', Sexo = '"
+				+ emp.sexo + "', Categoria = " + emp.getCategoria() + ", Anyos = " + emp.anyos + " "
 				+ " WHERE DNI = '" + emp.dni + "';");
 		ps.executeUpdate();
 	}
@@ -99,21 +99,12 @@ public class DatabaseManager {
 		ResultSetMetaData rsmd = rs.getMetaData();
 		List<Empleado> empleados = new ArrayList();
 		while (rs.next()) {
-			for (int i = 1; i <= 5; i++) {
-				if (i > 1)
-					System.out.print(",  ");
-				String columnValue = rs.getString(i);
-				System.out.print(columnValue + " " + rsmd.getColumnName(i));
-			}
-			System.out.println();
-			System.out.println("--------------------------------");
-
 			Empleado emp = new Empleado(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5));
 			empleados.add(emp);
-			System.out.println(emp.dni);
 		}
 		return empleados;
 	}
+	
 
 	public Empleado selectEmpleado(String dni) throws SQLException, DatosNoCorrectosException {
 		ps = con.prepareStatement("SELECT * FROM Nominas.empleados WHERE DNI = '" + dni + "';");
@@ -121,7 +112,52 @@ public class DatabaseManager {
 		rs.next();
 		return new Empleado(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5));
 	}
+	
+	public List<Empleado> selectEmpleadosNombre(String nombre) throws SQLException, DatosNoCorrectosException {
+		ps = con.prepareStatement("select * from Nominas.empleados WHERE Nombre_Completo = '" +nombre +"';");
+		rs = ps.executeQuery();
+		ResultSetMetaData rsmd = rs.getMetaData();
+		List<Empleado> empleados = new ArrayList();
+		while (rs.next()) {
+			Empleado emp = new Empleado(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5));
+			empleados.add(emp);
+		}
+		return empleados;
+	}
+	public List<Empleado> selectEmpleadosSexo(String sexo) throws SQLException, DatosNoCorrectosException {
+		ps = con.prepareStatement("select * from Nominas.empleados WHERE Sexo = '" + sexo +"';");
+		rs = ps.executeQuery();
+		ResultSetMetaData rsmd = rs.getMetaData();
+		List<Empleado> empleados = new ArrayList();
+		while (rs.next()) {
+			Empleado emp = new Empleado(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5));
+			empleados.add(emp);
+		}
+		return empleados;
+	}
+	public List<Empleado> selectEmpleadosCategoria(int categoria) throws SQLException, DatosNoCorrectosException {
+		ps = con.prepareStatement("select * from Nominas.empleados WHERE Categoria = " + categoria +";");
+		rs = ps.executeQuery();
+		ResultSetMetaData rsmd = rs.getMetaData();
+		List<Empleado> empleados = new ArrayList();
+		while (rs.next()) {
+			Empleado emp = new Empleado(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5));
+			empleados.add(emp);
+		}
+		return empleados;
+	}
 
+	public List<Empleado> selectEmpleadosAnyos(int anyos) throws SQLException, DatosNoCorrectosException {
+		ps = con.prepareStatement("select * from Nominas.empleados WHERE Anyos = " + anyos +";");
+		rs = ps.executeQuery();
+		ResultSetMetaData rsmd = rs.getMetaData();
+		List<Empleado> empleados = new ArrayList();
+		while (rs.next()) {
+			Empleado emp = new Empleado(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5));
+			empleados.add(emp);
+		}
+		return empleados;
+	}
 	public List<String> selectDNIs() throws SQLException {
 		List<String> dnis = new ArrayList();
 		ps = con.prepareStatement("SELECT DNI FROM Nominas.empleados");
@@ -137,7 +173,6 @@ public class DatabaseManager {
 		rs = ps.executeQuery();
 		int salario = 0;
 		while (rs.next()) {
-			System.out.println(rs.getInt(1));
 			salario = rs.getInt(1);
 		}
 		return salario;
