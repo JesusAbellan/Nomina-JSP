@@ -32,7 +32,7 @@ public class DatabaseManager {
 			dataSource = new BasicDataSource();
 			dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 			dataSource.setUsername("root");
-			dataSource.setPassword("Hermenegildo97");
+			dataSource.setPassword("");
 			dataSource.setUrl("jdbc:mysql://localhost:3306/Nominas?useTimezone=true&serverTimezone=UTC");
 			dataSource.setInitialSize(20);
 			dataSource.setMaxIdle(15);
