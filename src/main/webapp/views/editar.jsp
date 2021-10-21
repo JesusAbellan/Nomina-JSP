@@ -31,9 +31,9 @@
 				<td><input type="text" name="anyos" size="50" value="${empleado.anyos}"></td>
 			</tr>
 		</table>
-		<input type="submit" value="Guardar">
+		<input type="submit" class="save" value="Guardar">
 	</form>
 	<br>
-	<button type="button" name="back" onclick="history.back()">Volver</button>
+	<button type="button" name="back" class="back" onclick="history.back()">Volver</button>
 </body>
 </html>

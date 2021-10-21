@@ -8,10 +8,6 @@
 <link rel="stylesheet" href="styles/general.css"></link>
 </head>
 <body>
-<error-page> 
-     <exception-type>java.lang.Throwable</exception-type> 
-     <location>/error.jsp</location> 
-</error-page>
 <h1>Buscar Empleados</h1>
 	<form method="empresa">
 		<input type="text" name="nombre"> 
@@ -22,15 +18,15 @@
 		<input type="submit" name="opcion" value="buscarDni" style="width:150px">
 	</form>
 	<form method="empresa">
-		<input type="text" name="sexo"> 
+		<input type="text" name="sexo" pattern="[FM]" oninvalid="this.setCustomValidity('Introduce F o M')"> 
 		<input type="submit" name="opcion" value="buscarSexo" style="width:150px">
 	</form>
 	<form method="empresa">
-		<input type="text" name="categoria"> 
+		<input type="text" name="categoria" pattern="[0-9]+" oninvalid="this.setCustomValidity('Introduce un número')"> 
 		<input type="submit" name="opcion" value="buscarCategoria" style="width:150px">
 	</form>
 	<form method="empresa">
-		<input type="text" name="anyos"> 
+		<input type="text" name="anyos" pattern="[0-9]+" oninvalid="this.setCustomValidity('Introduce un número')"> 
 		<input type="submit" name="opcion" value="buscarAnyos" style="width:150px">
 	</form>
 	<br>

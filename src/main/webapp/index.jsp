@@ -9,16 +9,10 @@
 	</head>
 	<body>
 		<h1>Menu de Nominas JSP</h1>
-		<table>
-			<tr>
-				<td><a href ="empresa?opcion=mostrarEmpleados">Mostrar Empleados</a></td>
-			</tr>
-			<tr>
-				<td><a href ="empresa?opcion=mostrarSalario">Mostrar Salario</a></td>
-			</tr>
-			<tr>
-				<td><a href ="empresa?opcion=buscarEmpleados">Buscar Empleados</a></td>
-			</tr>
-		</table>
+		<ul>
+			<li class="firstli"><a href ="empresa?opcion=mostrarEmpleados">Mostrar Empleados</a></li>
+			<li><a href ="empresa?opcion=mostrarSalario">Mostrar Salario</a></li>
+			<li><a href ="empresa?opcion=buscarEmpleados">Buscar Empleados</a></li>
+		</ul>
 	</body>
 </html>
